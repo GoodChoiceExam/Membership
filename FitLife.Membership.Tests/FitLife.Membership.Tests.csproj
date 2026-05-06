@@ -20,4 +20,8 @@
     <Using Include="Xunit" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\FitLife.Membership.Api\FitLife.Membership.Api.csproj" />
+  </ItemGroup>
+
 </Project>
