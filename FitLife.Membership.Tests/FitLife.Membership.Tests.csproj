@@ -21,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Unit\" />
+    <ProjectReference Include="..\FitLife.Membership.Api\FitLife.Membership.Api.csproj" />
   </ItemGroup>
 
 </Project>

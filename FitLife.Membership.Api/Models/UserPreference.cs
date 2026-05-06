@@ -6,8 +6,8 @@ public class UserPreference
     public Guid MemberId { get; set; }
 
     //Interesser, mål og medlemsskab
-    public List<FitnessGoal> FitnessGoal { get; set; } = new();
-    public List<TrainingInterest> TrainingInterest { get; set; } = new();
+    public List<FitnessGoal> FitnessGoals { get; set; } = new();
+    public List<TrainingInterest> TrainingInterests { get; set; } = new();
     public MembershipType MembershipType { get; set; }
 
     //Notifikationer
