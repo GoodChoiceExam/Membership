@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("FitLife.Membership.Api")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+33a7e9d2f994c8a392d958e94b76f638c6c96b44")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+69acb868b3393f5d0fdd8261ca98e4f124dca31e")]
 [assembly: System.Reflection.AssemblyProductAttribute("FitLife.Membership.Api")]
 [assembly: System.Reflection.AssemblyTitleAttribute("FitLife.Membership.Api")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
