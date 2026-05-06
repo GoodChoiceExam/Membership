@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "8rIQ1ITe6DI=",
+  "success": true,
+  "projectFilePath": "/Users/kaspartacuzz/Desktop/IT-arkitektur/4. Semester/Eksamenscase/Fitlife/Membership/FitLife.Membership.Api/FitLife.Membership.Api.csproj",
+  "expectedPackageFiles": [
+    "/Users/kaspartacuzz/.nuget/packages/microsoft.aspnetcore.openapi/10.0.3/microsoft.aspnetcore.openapi.10.0.3.nupkg.sha512",
+    "/Users/kaspartacuzz/.nuget/packages/microsoft.openapi/2.0.0/microsoft.openapi.2.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}
