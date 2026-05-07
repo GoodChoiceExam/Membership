@@ -3,7 +3,7 @@ using Microsoft.IdentityModel.Tokens;
 using NLog;
 using NLog.Web;
 
-var logger = LogManager.Setup().LoadConfigurationFromFile("NLog.config").GetCurrentClassLogger();
+var logger = NLog.LogManager.Setup().LoadConfigurationFromFile("nlog.config").GetCurrentClassLogger();
 
 try
 {
@@ -14,34 +14,35 @@ try
 
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();
-    builder.Services.AddControllers();
-    
-    builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+
+    var jwksUrl = "http://localhost:5244/.well-known/jwks.json";
+
+    var jwksJson = new HttpClient()
+        .GetStringAsync(jwksUrl)
+        .GetAwaiter()
+        .GetResult();
+
+    var jwks = new JsonWebKeySet(jwksJson);
+
+    builder.Services
+        .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         .AddJwtBearer(options =>
         {
-            options.RequireHttpsMetadata = false;
             options.TokenValidationParameters = new TokenValidationParameters
             {
                 ValidateIssuer = true,
                 ValidIssuer = "fitlife-identity",
+
                 ValidateAudience = true,
-                ValidAudience = builder.Configuration["Jwt:Audience"],
+                ValidAudience = "fitlife",
+
                 ValidateLifetime = true,
+
                 ValidateIssuerSigningKey = true,
-                IssuerSigningKeyResolver = (_, _, kid, _) =>
-                {
-                    using var client = new HttpClient();
-
-                    var json = client.GetStringAsync(
-                        builder.Configuration["Jwt:Authority"] + "/.well-known/jwks.json").Result;
-
-                    var jwks = new JsonWebKeySet(json);
-
-                    return jwks.GetSigningKeys();
-                }
+                IssuerSigningKeys = jwks.Keys
             };
         });
-    
+
     builder.Services.AddAuthorization();
 
     var app = builder.Build();
@@ -50,16 +51,11 @@ try
     app.UseSwaggerUI();
 
     app.UseHttpsRedirection();
-    
+
     app.UseAuthentication();
     app.UseAuthorization();
 
     app.MapGet("/healthz", () => Results.Ok(new { status = "healthy" }));
-    
-    app.MapGet("/auth-test", () => Results.Ok(new { message = "JWT virker" }))
-        .RequireAuthorization();
-    
-    app.MapControllers();
 
     app.Run();
 }
