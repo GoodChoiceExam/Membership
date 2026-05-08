@@ -47,11 +47,9 @@ public class MemberService : IMemberService
     public Member UpdateMember(Member member, UpdateMemberRequest request)
     {
         ValidateRequired(request.FullName, "FullName");
-        ValidateRequired(request.Email, "Email");
         ValidateRequired(request.PhoneNumber, "PhoneNumber");
 
         member.FullName = request.FullName.Trim();
-        member.Email = request.Email.Trim();
         member.PhoneNumber = request.PhoneNumber.Trim();
         member.PrimaryCenter = request.PrimaryCenter;
 
