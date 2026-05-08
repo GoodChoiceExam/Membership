@@ -9,8 +9,7 @@ RUN dotnet restore MembershipService.sln
 
 COPY . .
 
-# Slå denne til, når TDD-testene er grønne
-# RUN dotnet test FitLife.Membership.Tests/FitLife.Membership.Tests.csproj --no-restore
+RUN dotnet test FitLife.Membership.Tests/FitLife.Membership.Tests.csproj --no-restore
 
 RUN dotnet publish FitLife.Membership.Api/FitLife.Membership.Api.csproj -c Release -o /app/publish
 
