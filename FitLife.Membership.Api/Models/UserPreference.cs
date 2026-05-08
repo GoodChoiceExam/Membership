@@ -1,8 +1,13 @@
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+
 namespace FitLife.Membership.Api.Models;
 
 public class UserPreference
 {
+    [BsonGuidRepresentation(GuidRepresentation.Standard)]
     public Guid Id { get; set; } = Guid.NewGuid();
+    [BsonGuidRepresentation(GuidRepresentation.Standard)]
     public Guid MemberId { get; set; }
 
     //Interesser, mål og medlemsskab

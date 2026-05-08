@@ -1,10 +1,15 @@
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+
 namespace FitLife.Membership.Api.Models;
 
 public class Member
 {
+    [BsonId]
+    [BsonGuidRepresentation(GuidRepresentation.Standard)]
     public Guid Id { get; set; } = Guid.NewGuid();
 
-    // Kommer fra IdentityService/JWT
+    [BsonGuidRepresentation(GuidRepresentation.Standard)]
     public Guid UserId { get; set; }
 
     //Personlige oplysninger
