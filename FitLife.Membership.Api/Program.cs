@@ -28,7 +28,7 @@ try
     builder.Services.AddScoped<IMemberService, MemberService>();
     builder.Services.AddScoped<IMemberRepository, MongoMemberRepository>();
 
-    var jwksUrl = "http://localhost:5244/.well-known/jwks.json";
+    var jwksUrl = builder.Configuration["Jwt:JwksUrl"]!;
 
     var jwksJson = new HttpClient()
         .GetStringAsync(jwksUrl)
