@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using NLog;
 using NLog.Web;
+using FitLife.Membership.Api.Messaging;
 
 var logger = NLog.LogManager.Setup().LoadConfigurationFromFile("nlog.config").GetCurrentClassLogger();
 
@@ -24,9 +25,9 @@ try
 
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();
-    
     builder.Services.AddScoped<IMemberService, MemberService>();
     builder.Services.AddScoped<IMemberRepository, MongoMemberRepository>();
+    builder.Services.AddScoped<IMemberEventPublisher, RabbitMqMemberEventPublisher>();
 
     var jwksUrl = "http://localhost:5244/.well-known/jwks.json";
 

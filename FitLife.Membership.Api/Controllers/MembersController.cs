@@ -5,6 +5,8 @@ using FitLife.Membership.Api.Repositories;
 using FitLife.Membership.Api.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using FitLife.Membership.Api.IntegrationEvents;
+using FitLife.Membership.Api.Messaging;
 
 namespace FitLife.Membership.Api.Controllers;
 
@@ -16,12 +18,14 @@ public class MembersController : ControllerBase
     private readonly IMemberRepository _repository;
     private readonly IMemberService _memberService;
     private readonly ILogger<MembersController> _logger;
+    private readonly IMemberEventPublisher _eventPublisher;
 
-    public MembersController(IMemberRepository repository, IMemberService memberService, ILogger<MembersController> logger)
+    public MembersController(IMemberRepository repository, IMemberService memberService, ILogger<MembersController> logger, IMemberEventPublisher eventPublisher)
     {
         _repository = repository;
         _memberService = memberService;
         _logger = logger;
+        _eventPublisher = eventPublisher;
     }
 
     [HttpGet]
@@ -61,6 +65,23 @@ public class MembersController : ControllerBase
         }
 
         await _repository.CreateAsync(member);
+        
+        try
+        {
+            await _eventPublisher.PublishMemberCreatedAsync(new MemberCreatedEvent(
+                EventId: Guid.NewGuid(),
+                MemberId: member.Id,
+                UserId: member.UserId,
+                FullName: member.FullName,
+                Email: member.Email,
+                PrimaryCenter: member.PrimaryCenter.ToString(),
+                MembershipType: member.UserPreference?.MembershipType.ToString() ?? string.Empty,
+                OccurredAtUtc: DateTime.UtcNow));
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Could not publish MemberCreated event for MemberId {MemberId}", member.Id);
+        }
 
         _logger.LogInformation(
             "Member created with MemberId {MemberId} for UserId {UserId}",
