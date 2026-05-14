@@ -7,7 +7,7 @@ namespace FitLife.Membership.Tests.Unit;
 
 public class MemberServiceTests
 {
-    [Fact]
+    [Test]
     public void CreateMember_WhenValidData_ShouldCreateMember()
     {
         var service = new MemberService();
@@ -24,7 +24,7 @@ public class MemberServiceTests
         result.PrimaryCenter.Should().Be(PrimaryCenter.Vesterbro);
     }
 
-    [Fact]
+    [Test]
     public void CreateMember_WhenValidData_ShouldSetDefaultMembershipStatusToActive()
     {
         var service = new MemberService();
@@ -37,7 +37,7 @@ public class MemberServiceTests
         result.StartDate.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(5));
     }
 
-    [Fact]
+    [Test]
     public void CreateMember_WhenUserIdIsEmpty_ShouldThrowArgumentException()
     {
         var service = new MemberService();
@@ -49,7 +49,7 @@ public class MemberServiceTests
             .WithMessage("*UserId*");
     }
 
-    [Fact]
+    [Test]
     public void CreateMember_WhenFullNameIsMissing_ShouldThrowArgumentException()
     {
         var service = new MemberService();
@@ -62,7 +62,7 @@ public class MemberServiceTests
             .WithMessage("*FullName*");
     }
 
-    [Fact]
+    [Test]
     public void CreateMember_WhenEmailIsMissing_ShouldThrowArgumentException()
     {
         var service = new MemberService();
@@ -75,7 +75,7 @@ public class MemberServiceTests
             .WithMessage("*Email*");
     }
 
-    [Fact]
+    [Test]
     public void CreateMember_WhenValidData_ShouldCreateUserPreference()
     {
         var service = new MemberService();
@@ -90,7 +90,7 @@ public class MemberServiceTests
         result.UserPreference.MembershipType.Should().Be(MembershipType.Premium);
     }
 
-    [Fact]
+    [Test]
     public void UpdateMember_WhenValidData_ShouldUpdateBasicProfile()
     {
         var service = new MemberService();
@@ -110,7 +110,7 @@ public class MemberServiceTests
         result.PrimaryCenter.Should().Be(PrimaryCenter.Østerbro);
     }
 
-    [Fact]
+    [Test]
     public void UpdateUserPreference_WhenValidData_ShouldUpdatePreferences()
     {
         var service = new MemberService();
@@ -144,7 +144,7 @@ public class MemberServiceTests
         result.UserPreference.CommunityActivity.Should().BeTrue();
     }
 
-    [Fact]
+    [Test]
     public void PauseMembership_WhenMemberIsActive_ShouldSetStatusToPaused()
     {
         var service = new MemberService();
@@ -156,7 +156,7 @@ public class MemberServiceTests
         result.CancellationDate.Should().BeNull();
     }
 
-    [Fact]
+    [Test]
     public void CancelMembership_WhenMemberExists_ShouldSetStatusToCancelledAndCancellationDate()
     {
         var service = new MemberService();
