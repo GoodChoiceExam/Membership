@@ -16,7 +16,7 @@ namespace FitLife.Membership.Tests.Unit;
 
 public class MemberControllerTests
 {
-    [Fact]
+    [Test]
     public async Task Create_WhenMemberDoesNotExist_ShouldCreateMemberForAuthenticatedUser()
     {
         var userId = Guid.NewGuid();
@@ -37,7 +37,7 @@ public class MemberControllerTests
         savedMember.Should().NotBeNull();
     }
 
-    [Fact]
+    [Test]
     public async Task Create_WhenMemberAlreadyExists_ShouldReturnConflict()
     {
         var userId = Guid.NewGuid();
@@ -59,7 +59,7 @@ public class MemberControllerTests
         result.Result.Should().BeOfType<ConflictObjectResult>();
     }
 
-    [Fact]
+    [Test]
     public async Task GetMe_WhenMemberExists_ShouldReturnAuthenticatedUsersMember()
     {
         var userId = Guid.NewGuid();
@@ -88,7 +88,7 @@ public class MemberControllerTests
         response.FullName.Should().Be("Sarah Nielsen");
     }
 
-    [Fact]
+    [Test]
     public async Task Cancel_WhenMemberExists_ShouldSetMembershipStatusToCancelled()
     {
         var userId = Guid.NewGuid();
