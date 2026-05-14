@@ -8,6 +8,9 @@ using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging.Abstractions;
+using FitLife.Membership.Api.IntegrationEvents;
+using FitLife.Membership.Api.Messaging;
+
 
 namespace FitLife.Membership.Tests.Unit;
 
@@ -119,7 +122,8 @@ public class MemberControllerTests
         var controller = new MembersController(
             repository,
             new MemberService(),
-            NullLogger<MembersController>.Instance);
+            NullLogger<MembersController>.Instance,
+            new FakeMemberEventPublisher());
 
         var claims = new List<Claim>
         {
@@ -188,6 +192,14 @@ public class MemberControllerTests
             if (index >= 0)
                 _members[index] = member;
 
+            return Task.CompletedTask;
+        }
+    }
+    
+    private class FakeMemberEventPublisher : IMemberEventPublisher
+    {
+        public Task PublishMemberCreatedAsync(MemberCreatedEvent memberCreatedEvent)
+        {
             return Task.CompletedTask;
         }
     }
