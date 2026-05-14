@@ -20,10 +20,10 @@ jobs:
           dotnet-version: "10.0.x"
 
       - name: Restore
-        run: dotnet restore MembershipService.sln
+        run: dotnet restore FitLife.Membership.slnx
 
       - name: Build
-        run: dotnet build MembershipService.sln --no-restore
+        run: dotnet build FitLife.Membership.slnx --no-restore
 
       - name: Test
         run: dotnet test FitLife.Membership.Tests/FitLife.Membership.Tests.csproj --no-restore --no-build
