@@ -12,7 +12,7 @@ using NLog;
 using NLog.Web;
 using FitLife.Membership.Api.Messaging;
 
-var logger = NLog.LogManager.Setup().LoadConfigurationFromFile("NLog.config").GetCurrentClassLogger();
+var logger = LogManager.Setup().LoadConfigurationFromFile("NLog.config").GetCurrentClassLogger();
 
 try
 {
@@ -31,7 +31,6 @@ try
         .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         .AddJwtBearer(options =>
         {
-            options.MapInboundClaims = false;
             options.TokenValidationParameters = new TokenValidationParameters
             {
                 ValidateIssuer = true,
@@ -102,7 +101,7 @@ try
     builder.Services.AddSingleton(database);
 
     builder.Services.AddSingleton<IMemberService, MemberService>();
-    builder.Services.AddSingleton<IMemberRepository, MongoMemberRepository>();
+    builder.Services.AddSingleton<IMemberRepository, MemberRepository>();
     builder.Services.AddSingleton<IMemberEventPublisher, RabbitMqMemberEventPublisher>();
 
     var app = builder.Build();
@@ -121,9 +120,9 @@ try
 
     app.Run();
 }
-catch (Exception e)
+catch (Exception ex)
 {
-    logger.Fatal(e, "MembershipService failed to start");
+    logger.Fatal(ex, "Application failed to start");
     throw;
 }
 finally
