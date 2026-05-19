@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="FitLife.Membership.Api/FitLife.Membership.Api.csproj" />
+  <Project Path="FitLife.Membership.Tests/FitLife.Membership.Tests.csproj" />
+</Solution>

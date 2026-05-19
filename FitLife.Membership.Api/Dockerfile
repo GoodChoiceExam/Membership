@@ -1,11 +1,11 @@
 ﻿FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 WORKDIR /src
 
-COPY MembershipService.sln .
+COPY FitLife.Membership.slnx .
 COPY FitLife.Membership.Api/FitLife.Membership.Api.csproj FitLife.Membership.Api/
 COPY FitLife.Membership.Tests/FitLife.Membership.Tests.csproj FitLife.Membership.Tests/
 
-RUN dotnet restore MembershipService.sln
+RUN dotnet restore FitLife.Membership.slnx
 
 COPY . .
 
