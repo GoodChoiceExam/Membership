@@ -12,6 +12,7 @@ using Microsoft.Extensions.Logging.Abstractions;
 
 namespace FitLife.Membership.Tests.Unit;
 
+[TestFixture]
 public class MemberControllerTests
 {
     [Test]

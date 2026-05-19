@@ -4,6 +4,7 @@ using FitLife.Membership.Api.Services;
 
 namespace FitLife.Membership.Tests.Unit;
 
+[TestFixture]
 public class MemberServiceTests
 {
     [Test]
