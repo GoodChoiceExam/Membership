@@ -12,7 +12,7 @@ using NLog;
 using NLog.Web;
 using FitLife.Membership.Api.Messaging;
 
-var logger = NLog.LogManager.Setup().LoadConfigurationFromFile("NLog.config").GetCurrentClassLogger();
+var logger = LogManager.Setup().LoadConfigurationFromFile("NLog.config").GetCurrentClassLogger();
 
 try
 {
