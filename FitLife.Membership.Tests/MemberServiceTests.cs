@@ -1,7 +1,6 @@
 using FitLife.Membership.Api.DTOs;
 using FitLife.Membership.Api.Models;
 using FitLife.Membership.Api.Services;
-using FluentAssertions;
 
 namespace FitLife.Membership.Tests.Unit;
 
@@ -16,12 +15,12 @@ public class MemberServiceTests
 
         var result = service.CreateMember(userId, request);
 
-        result.Should().NotBeNull();
-        result.UserId.Should().Be(userId);
-        result.FullName.Should().Be("Sarah Nielsen");
-        result.Email.Should().Be("sarah@fitlife.dk");
-        result.PhoneNumber.Should().Be("12345678");
-        result.PrimaryCenter.Should().Be(PrimaryCenter.Vesterbro);
+        Assert.That(result, Is.Not.Null);
+        Assert.That(result.UserId, Is.EqualTo(userId));
+        Assert.That(result.FullName, Is.EqualTo("Sarah Nielsen"));
+        Assert.That(result.Email, Is.EqualTo("sarah@fitlife.dk"));
+        Assert.That(result.PhoneNumber, Is.EqualTo("12345678"));
+        Assert.That(result.PrimaryCenter, Is.EqualTo(PrimaryCenter.Vesterbro));
     }
 
     [Test]
@@ -32,9 +31,9 @@ public class MemberServiceTests
 
         var result = service.CreateMember(Guid.NewGuid(), request);
 
-        result.MembershipStatus.Should().Be(MembershipStatus.Active);
-        result.CancellationDate.Should().BeNull();
-        result.StartDate.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(5));
+        Assert.That(result.MembershipStatus, Is.EqualTo(MembershipStatus.Active));
+        Assert.That(result.CancellationDate, Is.Null);
+        Assert.That(result.StartDate, Is.EqualTo(DateTime.UtcNow).Within(TimeSpan.FromSeconds(5)));
     }
 
     [Test]
@@ -43,10 +42,9 @@ public class MemberServiceTests
         var service = new MemberService();
         var request = CreateValidRequest();
 
-        Action act = () => service.CreateMember(Guid.Empty, request);
+        var exception = Assert.Throws<ArgumentException>(() => service.CreateMember(Guid.Empty, request));
 
-        act.Should().Throw<ArgumentException>()
-            .WithMessage("*UserId*");
+        Assert.That(exception!.Message, Does.Contain("UserId"));
     }
 
     [Test]
@@ -56,10 +54,9 @@ public class MemberServiceTests
         var request = CreateValidRequest();
         request.FullName = "";
 
-        Action act = () => service.CreateMember(Guid.NewGuid(), request);
+        var exception = Assert.Throws<ArgumentException>(() => service.CreateMember(Guid.NewGuid(), request));
 
-        act.Should().Throw<ArgumentException>()
-            .WithMessage("*FullName*");
+        Assert.That(exception!.Message, Does.Contain("FullName"));
     }
 
     [Test]
@@ -69,10 +66,9 @@ public class MemberServiceTests
         var request = CreateValidRequest();
         request.Email = "";
 
-        Action act = () => service.CreateMember(Guid.NewGuid(), request);
+        var exception = Assert.Throws<ArgumentException>(() => service.CreateMember(Guid.NewGuid(), request));
 
-        act.Should().Throw<ArgumentException>()
-            .WithMessage("*Email*");
+        Assert.That(exception!.Message, Does.Contain("Email"));
     }
 
     [Test]
@@ -83,11 +79,11 @@ public class MemberServiceTests
 
         var result = service.CreateMember(Guid.NewGuid(), request);
 
-        result.UserPreference.Should().NotBeNull();
-        result.UserPreference!.FitnessGoals.Should().Contain(FitnessGoal.Strength);
-        result.UserPreference.FitnessGoals.Should().Contain(FitnessGoal.ProgressOverview);
-        result.UserPreference.TrainingInterests.Should().Contain(TrainingInterest.Classes);
-        result.UserPreference.MembershipType.Should().Be(MembershipType.Premium);
+        Assert.That(result.UserPreference, Is.Not.Null);
+        Assert.That(result.UserPreference!.FitnessGoals, Does.Contain(FitnessGoal.Strength));
+        Assert.That(result.UserPreference.FitnessGoals, Does.Contain(FitnessGoal.ProgressOverview));
+        Assert.That(result.UserPreference.TrainingInterests, Does.Contain(TrainingInterest.Classes));
+        Assert.That(result.UserPreference.MembershipType, Is.EqualTo(MembershipType.Premium));
     }
 
     [Test]
@@ -105,9 +101,9 @@ public class MemberServiceTests
 
         var result = service.UpdateMember(member, request);
 
-        result.FullName.Should().Be("Sarah Jensen");
-        result.PhoneNumber.Should().Be("87654321");
-        result.PrimaryCenter.Should().Be(PrimaryCenter.Østerbro);
+        Assert.That(result.FullName, Is.EqualTo("Sarah Jensen"));
+        Assert.That(result.PhoneNumber, Is.EqualTo("87654321"));
+        Assert.That(result.PrimaryCenter, Is.EqualTo(PrimaryCenter.Østerbro));
     }
 
     [Test]
@@ -137,11 +133,11 @@ public class MemberServiceTests
 
         var result = service.UpdateUserPreference(member, request);
 
-        result.UserPreference!.FitnessGoals.Should().Contain(FitnessGoal.WeightLoss);
-        result.UserPreference.TrainingInterests.Should().Contain(TrainingInterest.HomeTraining);
-        result.UserPreference.MembershipType.Should().Be(MembershipType.Plus);
-        result.UserPreference.ClassReminders.Should().BeFalse();
-        result.UserPreference.CommunityActivity.Should().BeTrue();
+        Assert.That(result.UserPreference!.FitnessGoals, Does.Contain(FitnessGoal.WeightLoss));
+        Assert.That(result.UserPreference.TrainingInterests, Does.Contain(TrainingInterest.HomeTraining));
+        Assert.That(result.UserPreference.MembershipType, Is.EqualTo(MembershipType.Plus));
+        Assert.That(result.UserPreference.ClassReminders, Is.False);
+        Assert.That(result.UserPreference.CommunityActivity, Is.True);
     }
 
     [Test]
@@ -152,8 +148,8 @@ public class MemberServiceTests
 
         var result = service.PauseMembership(member);
 
-        result.MembershipStatus.Should().Be(MembershipStatus.Paused);
-        result.CancellationDate.Should().BeNull();
+        Assert.That(result.MembershipStatus, Is.EqualTo(MembershipStatus.Paused));
+        Assert.That(result.CancellationDate, Is.Null);
     }
 
     [Test]
@@ -164,9 +160,9 @@ public class MemberServiceTests
 
         var result = service.CancelMembership(member);
 
-        result.MembershipStatus.Should().Be(MembershipStatus.Cancelled);
-        result.CancellationDate.Should().NotBeNull();
-        result.CancellationDate.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(5));
+        Assert.That(result.MembershipStatus, Is.EqualTo(MembershipStatus.Cancelled));
+        Assert.That(result.CancellationDate, Is.Not.Null);
+        Assert.That(result.CancellationDate, Is.EqualTo(DateTime.UtcNow).Within(TimeSpan.FromSeconds(5)));
     }
 
     private static CreateMemberRequest CreateValidRequest()
