@@ -1,16 +1,14 @@
 using System.Security.Claims;
 using FitLife.Membership.Api.Controllers;
 using FitLife.Membership.Api.DTOs;
+using FitLife.Membership.Api.IntegrationEvents;
+using FitLife.Membership.Api.Messaging;
 using FitLife.Membership.Api.Models;
 using FitLife.Membership.Api.Repositories;
 using FitLife.Membership.Api.Services;
-using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging.Abstractions;
-using FitLife.Membership.Api.IntegrationEvents;
-using FitLife.Membership.Api.Messaging;
-
 
 namespace FitLife.Membership.Tests.Unit;
 
@@ -27,14 +25,17 @@ public class MemberControllerTests
 
         var result = await controller.CreateMember(request);
 
-        var createdResult = result.Result.Should().BeOfType<CreatedAtActionResult>().Subject;
-        var response = createdResult.Value.Should().BeOfType<MemberResponse>().Subject;
+        Assert.That(result.Result, Is.TypeOf<CreatedAtActionResult>());
 
-        response.UserId.Should().Be(userId);
-        response.FullName.Should().Be("Sarah Nielsen");
+        var createdResult = (CreatedAtActionResult)result.Result!;
+        Assert.That(createdResult.Value, Is.TypeOf<MemberResponse>());
+
+        var response = (MemberResponse)createdResult.Value!;
+        Assert.That(response.UserId, Is.EqualTo(userId));
+        Assert.That(response.FullName, Is.EqualTo("Sarah Nielsen"));
 
         var savedMember = await repository.GetByUserIdAsync(userId);
-        savedMember.Should().NotBeNull();
+        Assert.That(savedMember, Is.Not.Null);
     }
 
     [Test]
@@ -56,7 +57,7 @@ public class MemberControllerTests
 
         var result = await controller.CreateMember(CreateValidRequest());
 
-        result.Result.Should().BeOfType<ConflictObjectResult>();
+        Assert.That(result.Result, Is.TypeOf<ConflictObjectResult>());
     }
 
     [Test]
@@ -81,11 +82,14 @@ public class MemberControllerTests
 
         var result = await controller.GetMember();
 
-        var okResult = result.Result.Should().BeOfType<OkObjectResult>().Subject;
-        var response = okResult.Value.Should().BeOfType<MemberResponse>().Subject;
+        Assert.That(result.Result, Is.TypeOf<OkObjectResult>());
 
-        response.UserId.Should().Be(userId);
-        response.FullName.Should().Be("Sarah Nielsen");
+        var okResult = (OkObjectResult)result.Result!;
+        Assert.That(okResult.Value, Is.TypeOf<MemberResponse>());
+
+        var response = (MemberResponse)okResult.Value!;
+        Assert.That(response.UserId, Is.EqualTo(userId));
+        Assert.That(response.FullName, Is.EqualTo("Sarah Nielsen"));
     }
 
     [Test]
@@ -110,11 +114,14 @@ public class MemberControllerTests
 
         var result = await controller.Cancel();
 
-        var okResult = result.Result.Should().BeOfType<OkObjectResult>().Subject;
-        var response = okResult.Value.Should().BeOfType<MemberResponse>().Subject;
+        Assert.That(result.Result, Is.TypeOf<OkObjectResult>());
 
-        response.MembershipStatus.Should().Be(MembershipStatus.Cancelled);
-        response.CancellationDate.Should().NotBeNull();
+        var okResult = (OkObjectResult)result.Result!;
+        Assert.That(okResult.Value, Is.TypeOf<MemberResponse>());
+
+        var response = (MemberResponse)okResult.Value!;
+        Assert.That(response.MembershipStatus, Is.EqualTo(MembershipStatus.Cancelled));
+        Assert.That(response.CancellationDate, Is.Not.Null);
     }
 
     private static MembersController CreateController(FakeMemberRepository repository, Guid userId)
@@ -195,7 +202,7 @@ public class MemberControllerTests
             return Task.CompletedTask;
         }
     }
-    
+
     private class FakeMemberEventPublisher : IMemberEventPublisher
     {
         public Task PublishMemberCreatedAsync(MemberCreatedEvent memberCreatedEvent)
