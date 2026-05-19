@@ -120,9 +120,9 @@ try
 
     app.Run();
 }
-catch (Exception e)
+catch (Exception ex)
 {
-    logger.Fatal(e, "MembershipService failed to start");
+    logger.Fatal(ex, "Application failed to start");
     throw;
 }
 finally
