@@ -7,14 +7,8 @@ public class MongoMemberRepository : IMemberRepository
 {
     private readonly IMongoCollection<Member> _members;
 
-    public MongoMemberRepository(IConfiguration configuration)
+    public MongoMemberRepository(IMongoDatabase database)
     {
-        var connectionString = configuration["MongoDB:ConnectionString"]!;
-        var databaseName = configuration["MongoDB:DatabaseName"] ?? "fitlife-membership";
-
-        var client = new MongoClient(connectionString);
-        var database = client.GetDatabase(databaseName);
-
         _members = database.GetCollection<Member>("members");
     }
 

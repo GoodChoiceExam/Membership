@@ -5,6 +5,9 @@ using FitLife.Membership.Api.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
+using MongoDB.Bson.Serialization;
+using MongoDB.Bson.Serialization.Serializers;
+using MongoDB.Driver;
 using NLog;
 using NLog.Web;
 using FitLife.Membership.Api.Messaging;
@@ -13,6 +16,8 @@ var logger = NLog.LogManager.Setup().LoadConfigurationFromFile("NLog.config").Ge
 
 try
 {
+    BsonSerializer.RegisterSerializer(new GuidSerializer(MongoDB.Bson.GuidRepresentation.Standard));
+
     var builder = WebApplication.CreateBuilder(args);
 
     builder.Logging.ClearProviders();
@@ -92,9 +97,13 @@ try
         });
     });
 
-    builder.Services.AddScoped<IMemberService, MemberService>();
-    builder.Services.AddScoped<IMemberRepository, MongoMemberRepository>();
-    builder.Services.AddScoped<IMemberEventPublisher, RabbitMqMemberEventPublisher>();
+    var mongoClient = new MongoClient(builder.Configuration["MongoDB:ConnectionString"]);
+    var database = mongoClient.GetDatabase(builder.Configuration["MongoDB:DatabaseName"]);
+    builder.Services.AddSingleton(database);
+
+    builder.Services.AddSingleton<IMemberService, MemberService>();
+    builder.Services.AddSingleton<IMemberRepository, MongoMemberRepository>();
+    builder.Services.AddSingleton<IMemberEventPublisher, RabbitMqMemberEventPublisher>();
 
     var app = builder.Build();
     logger.Info("FitLife Membership API starting");
