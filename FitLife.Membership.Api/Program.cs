@@ -101,7 +101,7 @@ try
     builder.Services.AddSingleton(database);
 
     builder.Services.AddSingleton<IMemberService, MemberService>();
-    builder.Services.AddSingleton<IMemberRepository, MongoMemberRepository>();
+    builder.Services.AddSingleton<IMemberRepository, MemberRepository>();
     builder.Services.AddSingleton<IMemberEventPublisher, RabbitMqMemberEventPublisher>();
 
     var app = builder.Build();

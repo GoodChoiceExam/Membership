@@ -3,11 +3,11 @@ using MongoDB.Driver;
 
 namespace FitLife.Membership.Api.Repositories;
 
-public class MongoMemberRepository : IMemberRepository
+public class MemberRepository : IMemberRepository
 {
     private readonly IMongoCollection<Member> _members;
 
-    public MongoMemberRepository(IMongoDatabase database)
+    public MemberRepository(IMongoDatabase database)
     {
         _members = database.GetCollection<Member>("members");
     }
