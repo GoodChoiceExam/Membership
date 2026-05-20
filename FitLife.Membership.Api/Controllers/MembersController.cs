@@ -204,6 +204,14 @@ public class MembersController : ControllerBase
 
         return Ok(ToResponse(member));
     }
+
+    [Authorize(Roles = "Admin")]
+    [HttpGet("all")]
+    public async Task<ActionResult<List<MemberResponse>>> GetAll()
+    {
+        var members = await _repository.GetAllAsync();
+        return Ok(members.Select(ToResponse).ToList());
+    }
     
     private Guid? GetUserIdFromClaims()
     {

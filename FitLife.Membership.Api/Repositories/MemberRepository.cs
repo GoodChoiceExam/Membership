@@ -33,4 +33,9 @@ public class MemberRepository : IMemberRepository
             existing => existing.Id == member.Id,
             member);
     }
+
+    public async Task<List<Member>> GetAllAsync()
+    {
+        return await _members.Find(_ => true).ToListAsync();
+    }
 }

@@ -8,4 +8,5 @@ public interface IMemberRepository
     Task<Member?> GetByUserIdAsync(Guid userId);
     Task CreateAsync(Member member);
     Task UpdateAsync(Member member);
+    Task<List<Member>> GetAllAsync();
 }
