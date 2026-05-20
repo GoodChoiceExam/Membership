@@ -202,6 +202,11 @@ public class MemberControllerTests
 
             return Task.CompletedTask;
         }
+
+        public Task<List<Member>> GetAllAsync()
+        {
+            return Task.FromResult(_members.ToList());
+        }
     }
 
     private class FakeMemberEventPublisher : IMemberEventPublisher
